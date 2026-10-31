@@ -41,7 +41,7 @@
   let state = { turn: 0, moves: [] };   // host moves first
 
   // ---- Connection setup ----
-  const peer = new Peer();              // uses PeerJS's free public signaling server
+  const peer = new Peer({debug: 3});              // uses PeerJS's free public signaling server
 
   peer.on('open', (id) => {
     if (isHost) {
@@ -55,6 +55,7 @@
   });
 
   peer.on('connection', (c) => {        // host side: a guest connected
+    console.log('HOST: incoming connection from', c.peer);
     if (conn) { c.close(); return; }    // only one opponent for now
     attach(c);
   });
@@ -63,6 +64,8 @@
 
   function attach(c) {
     conn = c;
+    c.on('error', (e) => console.log('CONN error:', e));
+    c.on('open', () => console.log('CONN open'));
     const start = () => {
       $('status').textContent = 'Connected!';
       $('invite').hidden = true;
