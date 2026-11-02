@@ -1,11 +1,12 @@
-<!DOCTYPE html>
+<!doctype html>
+<!-- Board markup and styling based on kubowania/connect-four (MIT licence) -->
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Connect Four</title>
+<link rel="stylesheet" href="stylesheets/style.css">
 <script src="https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js"></script>
-<link href="stylesheets/style.css" rel="stylesheet">
 </head>
 <body>
   <h1>Connect Four</h1>
@@ -18,13 +19,12 @@
   </div>
 
   <div id="game" hidden>
-    <h2 id="turn"></h2>
-    <button id="move">Make a move</button>
-    <ul id="log"></ul>
+    <h3 id="turn"></h3>
+    <h3 id="result"></h3>
+    <div class="grid"></div>
+    <button id="again" hidden>Play again</button>
   </div>
 
-  <!---<script src="/javascripts/app.js"></script>-->
-
-<script src="javascripts/net.js"></script>
+  <script src="javascripts/net.js"></script>
 </body>
 </html>
