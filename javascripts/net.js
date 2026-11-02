@@ -42,6 +42,7 @@ function newGame() {
 // Drop a disc for player `who` in column `col`. Returns true if it was legal.
 function dropDisc(col, who) {
   if (game.winner !== null || game.turn !== who) return false;
+  // start at the bottom to ensure disks "fall" to the lowest empty row in the column
   for (let r = ROWS - 1; r >= 0; r--) {
     // translate row/col to index in the board array
     const i = r * COLS + col;
@@ -84,6 +85,7 @@ cells.forEach((cell, i) => {
   };
 });
 
+// play again
 $('again').onclick = () => {
   newGame();
   render();

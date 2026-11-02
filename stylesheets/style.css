@@ -1,5 +1,5 @@
 .grid {
-  border: 1px solid;
+  border: 1px solid white;
   height: 132px;
   width: 154px;
   display: flex;
@@ -9,7 +9,7 @@
 .grid div {
   height: 20px;
   width: 20px;
-  border: 1px dotted;
+  border: 1px dotted white;
 }
 
 .player-one {
@@ -20,4 +20,9 @@
 .player-two {
   background-color: blue;
   border-radius: 10px;
+}
+
+body {
+  background-color: black;
+  color: white;
 }
