@@ -12,11 +12,7 @@ let game;
 // ---- Build the board (42 playable cells + the bottom "taken" row) ----
 const grid = document.querySelector('.grid');
 for (let i = 0; i < COLS * ROWS; i++) grid.appendChild(document.createElement('div'));
-for (let i = 0; i < COLS; i++) {
-  const d = document.createElement('div');
-  d.className = 'taken';
-  grid.appendChild(d);
-}
+
 const cells = [...grid.children].slice(0, COLS * ROWS);
 
 // ---- Every possible line of four ----
