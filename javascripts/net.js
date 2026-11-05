@@ -1,6 +1,7 @@
 // ---- Who am I? ----
 // No hash in the URL = host (Player 1). Hash present = guest (Player 2).
 const hostId = location.hash.slice(1);
+console.log('hostId', hostId);    // for debugging
 const isHost = !hostId;
 const me = isHost ? 0 : 1;            // 0 = Player 1, 1 = Player 2
 
