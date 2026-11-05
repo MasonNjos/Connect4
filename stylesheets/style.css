@@ -15,14 +15,31 @@
 .player-one {
   background-color: red;
   border-radius: 10px;
+
+  animation: fallDown 1s ease-out forwards;
 }
 
 .player-two {
-  background-color: blue;
+  background-color: rgb(255, 200, 0);
   border-radius: 10px;
+
+  animation: fallDown 1s ease-out forwards;
 }
 
 body {
-  background-color: black;
+  background-color: rgb(3, 5, 102);
   color: white;
+}
+
+
+/* Keyframes for the falling motion */
+@keyframes fallDown {
+  0% {
+    opacity: 0;
+    transform: translateY(-500px); /* Starts far up above its final spot */
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0); /* Ends at its normal position */
+  }
 }
