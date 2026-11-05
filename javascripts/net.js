@@ -1,7 +1,6 @@
 // ---- Who am I? ----
 // No hash in the URL = host (Player 1). Hash present = guest (Player 2).
 const hostId = location.hash.slice(1);
-console.log('hostId', hostId);    // for debugging
 const isHost = !hostId;
 const me = isHost ? 0 : 1;            // 0 = Player 1, 1 = Player 2
 
@@ -99,11 +98,13 @@ const peer = new Peer();
 peer.on('open', (id) => {
   if (isHost) {
     $('link').value = location.origin + location.pathname + '#' + id;
+    console.log('link: ' + $('link').value);  // for debugging
     $('invite').hidden = false;
     $('status').textContent = 'Waiting for your friend to open the link…';
   } else {
     $('status').textContent = 'Joining…';
     attach(peer.connect(hostId));
+    console.log('connecting to ' + hostId);  // for debugging
   }
 });
 
