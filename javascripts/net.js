@@ -49,22 +49,44 @@ function dropDisc(col, who) {
     if (game.board[i] === null) {
       // if its empty, drop the disc here
       game.board[i] = who;
-      // check for winner
-      if (LINES.some((l) => l.every((j) => game.board[j] === who))) game.winner = who;
-      else if (game.board.every((v) => v !== null)) game.winner = 'draw';
-      // drop disk
-      else game.turn = 1 - who;
-      render();
+      // check for winner / switch turns
+      afterMove(who);
       return true;
     }
   }
   return false; // column full
 }
 
+// Shared end-of-move logic: check for winners, otherwise pass the turn.
+function afterMove(who) {
+  const wins = (p) => LINES.some((l) => l.every((j) => game.board[j] === p));
+  if (wins(who)) game.winner = who;                 // mover wins, even if both have four
+  else if (wins(1 - who)) game.winner = 1 - who;    // a pop can give the opponent four
+  else if (game.board.every((v) => v !== null)) game.winner = 'draw';
+  else game.turn = 1 - who;
+  render();
+}
+
+// Pop out player `who`'s disc from the bottom of column `col`.
+// Everything above it falls down one row. Returns true if it was legal.
+function popDisc(col, who) {
+  if (game.winner !== null || game.turn !== who) return false;
+  if (game.board[(ROWS - 1) * COLS + col] !== who) return false;
+  for (let r = ROWS - 1; r > 0; r--) {
+    game.board[r * COLS + col] = game.board[(r - 1) * COLS + col];
+  }
+  game.board[col] = null;                           // top of the column is now empty
+  afterMove(who);
+  return true;
+}
+
 function render() {
   cells.forEach((cell, i) => {
     const v = game.board[i];
     cell.className = v === null ? '' : 'taken ' + (v === 0 ? 'player-one' : 'player-two');
+    const bottom = Math.floor(i / COLS) === ROWS - 1;
+    cell.title = bottom && v === me && game.turn === me && game.winner === null
+      ? 'Click to pop out' : '';
   });
   const myTurn = game.turn === me;
   $('turn').textContent = game.winner !== null ? '' :
@@ -81,7 +103,12 @@ cells.forEach((cell, i) => {
   cell.onclick = () => {
     if (!conn || game.turn !== me) return;
     const col = i % COLS;
-    if (dropDisc(col, me)) conn.send({ type: 'move', col });
+    const isBottom = Math.floor(i / COLS) === ROWS - 1;
+    if (isBottom && game.board[i] === me) {          // clicking your own bottom disc pops it
+      if (popDisc(col, me)) conn.send({ type: 'pop', col });
+    } else if (dropDisc(col, me)) {
+      conn.send({ type: 'move', col });
+    }
   };
 });
 
@@ -128,6 +155,7 @@ function attach(c) {
 
   c.on('data', (msg) => {
     if (msg.type === 'move') dropDisc(msg.col, 1 - me);
+    else if (msg.type === 'pop') popDisc(msg.col, 1 - me);
     else if (msg.type === 'reset') { newGame(); render(); }
   });
   c.on('close', () => {
